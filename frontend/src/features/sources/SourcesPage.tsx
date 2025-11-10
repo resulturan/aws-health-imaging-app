@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Button,
@@ -11,8 +12,9 @@ import {
   Select,
   message,
   Popconfirm,
+  Dropdown,
 } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, DownOutlined } from '@ant-design/icons';
 import {
   useGetImagingSourcesQuery,
   useCreateImagingSourceMutation,
@@ -34,6 +36,7 @@ const AWS_REGIONS = [
 ];
 
 export default function SourcesPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSource, setEditingSource] = useState<ImagingSource | null>(null);
@@ -159,14 +162,29 @@ export default function SourcesPage() {
     },
   ];
 
+  const addSourceMenuItems = [
+    {
+      key: 'quick',
+      label: 'Quick Add (Modal)',
+      onClick: handleCreate,
+    },
+    {
+      key: 'full',
+      label: 'Full Form Page',
+      onClick: () => navigate('/sources/new'),
+    },
+  ];
+
   return (
     <Card
       title="Imaging Sources"
       extra={
         canManageSources && (
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-            Add Source
-          </Button>
+          <Dropdown menu={{ items: addSourceMenuItems }}>
+            <Button type="primary" icon={<PlusOutlined />}>
+              Add Source <DownOutlined />
+            </Button>
+          </Dropdown>
         )
       }
     >
