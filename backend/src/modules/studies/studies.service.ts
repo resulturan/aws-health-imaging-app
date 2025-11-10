@@ -73,7 +73,9 @@ export class StudiesService {
     if (metadataBlob) {
       // Convert the blob to string
       const decoder = new TextDecoder('utf-8');
-      const metadataString = decoder.decode(metadataBlob);
+      const metadataString = decoder.decode(
+          metadataBlob as unknown as ArrayBuffer
+      );
       metadata = JSON.parse(metadataString);
     }
 
