@@ -10,11 +10,13 @@ import {
   Tag,
   Typography,
   Empty,
+  message,
 } from 'antd';
-import { SearchOutlined, EyeOutlined } from '@ant-design/icons';
+import { SearchOutlined, EyeOutlined, DownloadOutlined } from '@ant-design/icons';
 import {
   useGetImagingSourcesQuery,
   useSearchPatientsQuery,
+  useExportStudyMutation,
   Patient,
   Study,
 } from '../../services/api';
@@ -40,6 +42,32 @@ export default function PatientsPage() {
       skip: !selectedSource,
     },
   );
+  const [exportStudy, { isLoading: isExporting }] = useExportStudyMutation();
+
+  const handleExportStudy = async (study: Study) => {
+    try {
+      message.loading({ content: 'Exporting study...', key: 'export', duration: 0 });
+      const blob = await exportStudy({
+        imageSetId: study.imageSetId,
+        sourceId: selectedSource,
+      }).unwrap();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `study_${study.imageSetId}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      message.success({ content: 'Study exported successfully!', key: 'export' });
+    } catch (error) {
+      console.error('Failed to export study:', error);
+      message.error({ content: 'Failed to export study', key: 'export' });
+    }
+  };
 
   const expandedRowRender = (patient: Patient) => {
     const studyColumns = [
@@ -77,18 +105,28 @@ export default function PatientsPage() {
         title: 'Actions',
         key: 'actions',
         render: (_: any, study: Study) => (
-          <Button
-            type="primary"
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() =>
-              navigate(
-                `/viewer/${study.imageSetId}?sourceId=${selectedSource}`,
-              )
-            }
-          >
-            View
-          </Button>
+          <Space>
+            <Button
+              type="primary"
+              size="small"
+              icon={<EyeOutlined />}
+              onClick={() =>
+                navigate(
+                  `/viewer/${study.imageSetId}?sourceId=${selectedSource}`,
+                )
+              }
+            >
+              View
+            </Button>
+            <Button
+              size="small"
+              icon={<DownloadOutlined />}
+              onClick={() => handleExportStudy(study)}
+              loading={isExporting}
+            >
+              Export
+            </Button>
+          </Space>
         ),
       },
     ];

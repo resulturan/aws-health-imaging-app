@@ -1,14 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Card, Spin, Typography, Space, Alert } from 'antd';
+import { Card, Spin, Typography, Space, Alert, Collapse, Segmented } from 'antd';
+import { AppstoreOutlined, BlockOutlined } from '@ant-design/icons';
 import { useGetStudyMetadataQuery } from '../../services/api';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store';
+import DicomViewer from '../../components/DicomViewer';
+import MPRViewer from '../../components/MPRViewer';
 
 const { Title, Text } = Typography;
+const { Panel } = Collapse;
+
+type ViewMode = 'stack' | 'mpr';
 
 export default function ViewerPage() {
   const { imageSetId } = useParams<{ imageSetId: string }>();
   const [searchParams] = useSearchParams();
   const sourceId = searchParams.get('sourceId');
+  const token = useSelector((state: RootState) => state.auth.token);
+  const [viewMode, setViewMode] = useState<ViewMode>('stack');
 
   const {
     data: metadataResponse,
@@ -24,6 +34,16 @@ export default function ViewerPage() {
       <Alert
         message="Error"
         description="Missing imageSetId or sourceId"
+        type="error"
+      />
+    );
+  }
+
+  if (!token) {
+    return (
+      <Alert
+        message="Authentication Required"
+        description="You must be logged in to view DICOM images"
         type="error"
       />
     );
@@ -51,66 +71,66 @@ export default function ViewerPage() {
   return (
     <Space direction="vertical" style={{ width: '100%' }} size="large">
       <Card>
-        <Title level={3}>DICOM Viewer</Title>
-        <Text type="secondary">Image Set ID: {imageSetId}</Text>
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Title level={3}>DICOM Viewer</Title>
+          <Text type="secondary">Image Set ID: {imageSetId}</Text>
+
+          <Segmented
+            value={viewMode}
+            onChange={(value) => setViewMode(value as ViewMode)}
+            options={[
+              {
+                label: 'Stack View',
+                value: 'stack',
+                icon: <AppstoreOutlined />,
+              },
+              {
+                label: 'MPR View',
+                value: 'mpr',
+                icon: <BlockOutlined />,
+              },
+            ]}
+          />
+        </Space>
       </Card>
 
-      <Card title="Study Information">
+      <Card title={viewMode === 'stack' ? 'Stack Viewer' : 'Multi-Planar Reconstruction (MPR)'}>
         {metadataResponse?.metadata ? (
-          <div>
-            <pre style={{ background: '#f5f5f5', padding: 16, borderRadius: 4 }}>
-              {JSON.stringify(metadataResponse.metadata, null, 2)}
-            </pre>
-          </div>
+          viewMode === 'stack' ? (
+            <DicomViewer
+              imageSetId={imageSetId}
+              sourceId={sourceId}
+              metadata={metadataResponse.metadata}
+              token={token}
+            />
+          ) : (
+            <MPRViewer
+              imageSetId={imageSetId}
+              sourceId={sourceId}
+              metadata={metadataResponse.metadata}
+              token={token}
+            />
+          )
         ) : (
-          <Text>No metadata available</Text>
+          <Alert
+            message="No Metadata"
+            description="Unable to load study metadata. The viewer cannot display images without metadata."
+            type="warning"
+          />
         )}
       </Card>
 
-      <Card title="Viewer">
-        <Alert
-          message="DICOM Viewer Integration"
-          description={
-            <div>
-              <p>
-                This is a placeholder for the DICOM viewer. To complete the integration:
-              </p>
-              <ul>
-                <li>Install Cornerstone3D dependencies</li>
-                <li>Initialize the rendering engine</li>
-                <li>Create viewports for displaying images</li>
-                <li>
-                  Use the DICOM proxy endpoint to fetch frames:
-                  <code style={{ marginLeft: 8 }}>
-                    /api/dicom-proxy/frames/{'{imageSetId}'}/{'{frameId}'}?sourceId=
-                    {'{sourceId}'}
-                  </code>
-                </li>
-                <li>Implement tools (zoom, pan, windowing, measurements)</li>
-              </ul>
-              <p>
-                The backend proxy is fully functional and will handle authentication
-                and credential management.
-              </p>
-            </div>
-          }
-          type="info"
-          showIcon
-        />
-        <div
-          style={{
-            marginTop: 16,
-            height: 600,
-            background: '#000',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-          }}
-        >
-          <Text style={{ color: '#fff' }}>DICOM Viewer Canvas Placeholder</Text>
-        </div>
-      </Card>
+      <Collapse>
+        <Panel header="Study Metadata (Advanced)" key="1">
+          {metadataResponse?.metadata ? (
+            <pre style={{ background: '#f5f5f5', padding: 16, borderRadius: 4, maxHeight: 400, overflow: 'auto' }}>
+              {JSON.stringify(metadataResponse.metadata, null, 2)}
+            </pre>
+          ) : (
+            <Text>No metadata available</Text>
+          )}
+        </Panel>
+      </Collapse>
     </Space>
   );
 }

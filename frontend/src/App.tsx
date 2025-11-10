@@ -7,6 +7,7 @@ import RegisterPage from './features/auth/RegisterPage';
 import SourcesPage from './features/sources/SourcesPage';
 import PatientsPage from './features/patients/PatientsPage';
 import ViewerPage from './features/viewer/ViewerPage';
+import ComparisonPage from './features/comparison/ComparisonPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -39,6 +40,7 @@ function App() {
             <Route path="sources" element={<SourcesPage />} />
             <Route path="patients" element={<PatientsPage />} />
             <Route path="viewer/:imageSetId" element={<ViewerPage />} />
+            <Route path="comparison" element={<ComparisonPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

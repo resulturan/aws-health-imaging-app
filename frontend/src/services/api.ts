@@ -194,6 +194,15 @@ export const api = createApi({
         { type: 'Studies', id: imageSetId },
       ],
     }),
+
+    // Export endpoint
+    exportStudy: builder.mutation<Blob, { imageSetId: string; sourceId: string }>({
+      query: ({ imageSetId, sourceId }) => ({
+        url: `/export/study/${imageSetId}`,
+        params: { sourceId },
+        responseHandler: (response) => response.blob(),
+      }),
+    }),
   }),
 });
 
@@ -210,4 +219,5 @@ export const {
   useSearchPatientsQuery,
   useGetPatientStudiesQuery,
   useGetStudyMetadataQuery,
+  useExportStudyMutation,
 } = api;
