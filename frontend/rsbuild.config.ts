@@ -25,4 +25,19 @@ export default defineConfig({
       root: 'dist',
     },
   },
+  tools: {
+    rspack: {
+      module: {
+        rules: [
+          {
+            test: /\.wasm$/,
+            type: 'asset/resource',
+          },
+        ],
+      },
+      experiments: {
+        asyncWebAssembly: true,
+      },
+    },
+  },
 });
