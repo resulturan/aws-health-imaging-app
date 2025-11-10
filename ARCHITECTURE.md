@@ -266,45 +266,92 @@ GET /health
 3. Update DNS if needed
 4. Verify health checks
 
-## Future Enhancements
+## Implemented Features
 
-### Short Term
-1. Full Cornerstone3D integration
-2. MPR (Multi-Planar Reconstruction)
-3. Advanced DICOM tools (measurements, annotations)
-4. Export studies to local storage
+### ✅ DICOM Viewer (Cornerstone3D)
+1. **Full Cornerstone3D integration** - Complete DICOM image rendering
+2. **MPR (Multi-Planar Reconstruction)** - Axial, Sagittal, Coronal views
+3. **Advanced DICOM tools** - Measurements, annotations, ROI analysis
+   - Length measurement tool
+   - Rectangle and Elliptical ROI tools
+   - Probe tool for pixel value inspection
+   - Window/Level adjustment
+   - Zoom and Pan tools
+4. **Export studies to local storage** - Download DICOM frames as ZIP files
 
-### Medium Term
-1. WebSocket for real-time updates
-2. Study comparison view
-3. AI integration for image analysis
-4. Mobile app (React Native)
+### ✅ Real-Time Features
+1. **WebSocket integration** - Real-time notifications for:
+   - New studies
+   - Study updates
+   - Source status changes
+   - System notifications
+2. **Study comparison view** - Side-by-side study comparison (up to 4 studies)
 
-### Long Term
+### ✅ Compliance & Security
+1. **HIPAA Compliance**
+   - Encryption at rest and in transit ✓
+   - Comprehensive audit logging ✓
+   - User authentication ✓
+   - Role-based access ✓
+   - Activity tracking for all critical operations
+
+2. **GDPR Compliance**
+   - User data export (JSON format) ✓
+   - Right to deletion/erasure ✓
+   - Consent management ✓
+   - Data retention policies ✓
+   - Audit trail for data access
+
+3. **Audit Logging System**
+   - Tracks all user actions (login, logout, data access)
+   - Records study views, exports, and frame access
+   - Logs source management operations
+   - Stores IP addresses and user agents
+   - Admin-only access to audit logs
+
+### 🔄 Future Enhancements
+
+#### Short Term
+1. Advanced MPR features (oblique views, curved reformats)
+2. DICOM SR (Structured Report) support
+3. Hanging protocols for automated layout
+4. Keyboard shortcuts for common actions
+
+#### Medium Term
+1. AI integration for image analysis
+2. Advanced search with DICOM tags
+3. Mobile app (React Native)
+4. Batch export functionality
+
+#### Long Term
 1. PACS integration
 2. HL7 FHIR support
-3. Multi-language support
-4. Reporting module
+3. Multi-language support (i18n)
+4. Reporting and analytics module
+5. Worklist management
 
 ## Compliance Considerations
 
-### HIPAA
-- Encryption at rest and in transit ✓
-- Access logging (add audit trail)
-- User authentication ✓
-- Role-based access ✓
+### HIPAA Compliance ✅
+- ✅ Encryption at rest and in transit
+- ✅ Comprehensive audit trail
+- ✅ User authentication
+- ✅ Role-based access control
+- ✅ Access logging for all PHI access
 
-### GDPR
-- User data export (add feature)
-- Right to deletion (add feature)
-- Consent management (add feature)
-- Data minimization ✓
+### GDPR Compliance ✅
+- ✅ User data export (portable JSON format)
+- ✅ Right to erasure/deletion
+- ✅ Consent management and tracking
+- ✅ Data minimization
+- ✅ Data retention policies
 
-### SOC 2
-- Access controls ✓
-- Encryption ✓
-- Monitoring (implement)
-- Incident response (document)
+### SOC 2 Compliance (Partial)
+- ✅ Access controls
+- ✅ Encryption
+- ✅ Audit logging
+- ⚠️ Monitoring dashboard (implement)
+- ⚠️ Incident response documentation (document)
 
 ## Cost Optimization
 

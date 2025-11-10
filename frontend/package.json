@@ -13,36 +13,37 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^6.21.1",
-    "@reduxjs/toolkit": "^2.0.1",
-    "react-redux": "^9.1.0",
-    "antd": "^5.13.2",
     "@ant-design/icons": "^5.2.6",
     "@cornerstonejs/core": "^1.60.0",
-    "@cornerstonejs/tools": "^1.60.0",
     "@cornerstonejs/streaming-image-volume-loader": "^1.60.0",
+    "@cornerstonejs/tools": "^1.60.0",
+    "@reduxjs/toolkit": "^2.0.1",
+    "antd": "^5.13.2",
+    "axios": "^1.6.5",
     "dicom-parser": "^1.8.21",
-    "axios": "^1.6.5"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.21.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@rsbuild/core": "^0.7.0",
     "@rsbuild/plugin-react": "^0.7.0",
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/ui": "^1.2.0",
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "jsdom": "^23.2.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.0",
-    "@vitest/ui": "^1.2.0",
-    "@testing-library/react": "^14.1.2",
-    "@testing-library/jest-dom": "^6.2.0",
-    "@testing-library/user-event": "^14.5.2",
-    "jsdom": "^23.2.0"
+    "vitest": "^1.2.0"
   }
 }

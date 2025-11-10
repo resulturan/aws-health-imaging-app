@@ -17,17 +17,20 @@ enum Role {
 }
 
 model User {
-  id             String          @id @default(uuid())
-  email          String          @unique
-  password       String
-  firstName      String?
-  lastName       String?
-  role           Role            @default(VIEWER)
-  isActive       Boolean         @default(true)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  imagingSources ImagingSource[]
-  accessGrants   AccessGrant[]
+  id                    String          @id @default(uuid())
+  email                 String          @unique
+  password              String
+  firstName             String?
+  lastName              String?
+  role                  Role            @default(VIEWER)
+  isActive              Boolean         @default(true)
+  dataProcessingConsent Boolean         @default(false) // GDPR consent
+  consentDate           DateTime?       // When consent was given
+  dataRetentionDays     Int             @default(365)   // How long to retain data
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  imagingSources        ImagingSource[]
+  accessGrants          AccessGrant[]
 
   @@map("users")
 }
@@ -59,4 +62,40 @@ model AccessGrant {
 
   @@unique([userId, imagingSourceId])
   @@map("access_grants")
+}
+
+enum AuditAction {
+  USER_LOGIN
+  USER_LOGOUT
+  USER_REGISTER
+  USER_UPDATE
+  USER_DELETE
+  SOURCE_CREATE
+  SOURCE_UPDATE
+  SOURCE_DELETE
+  SOURCE_ACCESS_GRANTED
+  SOURCE_ACCESS_REVOKED
+  STUDY_VIEW
+  STUDY_EXPORT
+  FRAME_ACCESS
+  METADATA_ACCESS
+}
+
+model AuditLog {
+  id         String      @id @default(uuid())
+  userId     String?     // Nullable for system events
+  userEmail  String?     // Store email for reference even if user is deleted
+  action     AuditAction
+  resource   String?     // Resource identifier (e.g., studyId, sourceId)
+  details    Json?       // Additional details about the action
+  ipAddress  String?
+  userAgent  String?
+  success    Boolean     @default(true)
+  errorMessage String?
+  createdAt  DateTime    @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
 }

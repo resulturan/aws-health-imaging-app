@@ -10,6 +10,10 @@ import { StudiesModule } from './modules/studies/studies.module';
 import { DicomProxyModule } from './modules/dicom-proxy/dicom-proxy.module';
 import { CredentialsModule } from './modules/credentials/credentials.module';
 import { CacheModule } from './modules/cache/cache.module';
+import { ExportModule } from './modules/export/export.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { GdprModule } from './modules/gdpr/gdpr.module';
 
 @Module({
   imports: [
@@ -26,12 +30,16 @@ import { CacheModule } from './modules/cache/cache.module';
     PrismaModule,
     CacheModule,
     CredentialsModule,
+    AuditModule,
+    GdprModule,
     AuthModule,
     UsersModule,
     ImagingSourcesModule,
     PatientsModule,
     StudiesModule,
     DicomProxyModule,
+    ExportModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
