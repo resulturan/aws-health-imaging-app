@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  SOURCE_MANAGER
+  VIEWER
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  firstName      String?
+  lastName       String?
+  role           Role            @default(VIEWER)
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  imagingSources ImagingSource[]
+  accessGrants   AccessGrant[]
+
+  @@map("users")
+}
+
+model ImagingSource {
+  id             String        @id @default(uuid())
+  name           String
+  description    String?
+  datastoreId    String
+  region         String
+  encryptedCreds String        // Encrypted JSON containing AWS credentials
+  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId        String
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  accessGrants   AccessGrant[]
+
+  @@map("imaging_sources")
+}
+
+model AccessGrant {
+  id              String        @id @default(uuid())
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  imagingSource   ImagingSource @relation(fields: [imagingSourceId], references: [id], onDelete: Cascade)
+  imagingSourceId String
+  createdAt       DateTime      @default(now())
+
+  @@unique([userId, imagingSourceId])
+  @@map("access_grants")
+}
