@@ -5,6 +5,7 @@ import MainLayout from './components/layout/MainLayout';
 import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
 import SourcesPage from './features/sources/SourcesPage';
+import AddSourcePage from './features/sources/AddSourcePage';
 import PatientsPage from './features/patients/PatientsPage';
 import ViewerPage from './features/viewer/ViewerPage';
 import ComparisonPage from './features/comparison/ComparisonPage';
@@ -38,6 +39,7 @@ function App() {
           >
             <Route index element={<Navigate to="/sources" replace />} />
             <Route path="sources" element={<SourcesPage />} />
+            <Route path="sources/new" element={<AddSourcePage />} />
             <Route path="patients" element={<PatientsPage />} />
             <Route path="viewer/:imageSetId" element={<ViewerPage />} />
             <Route path="comparison" element={<ComparisonPage />} />
